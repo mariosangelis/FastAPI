@@ -1,0 +1,29 @@
+services:
+
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    container_name: mongodb
+
+  service_backend:
+    build: ./service_backend
+    stdin_open: true
+    tty: true
+    container_name: service_backend
+
+    depends_on:
+      - mongodb
+    command: python3 Skeleton.py mongodb
+
+  front-end:
+    build: ./front-end
+    stdin_open: true
+    tty: true
+    container_name: front_end_api
+    ports:
+      - "8000:8000/tcp"
+    #command: uvicorn API_endpoint:app --host 0.0.0.0 --port 8000
+    command: python3 API_endpoint.py mongodb
+
+    depends_on:
+      - mongodb
+
